@@ -5,6 +5,7 @@
  */
 package bipjson.converter;
 
+import java.io.File;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
@@ -15,6 +16,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -30,20 +32,30 @@ public class BipJsonConverter extends Application {
         MenuBar menuBar = new MenuBar();
 
         Menu fileMenu = new Menu("File");
-        // Submenu of file menu
+// Submenu of file menu
         MenuItem openItem = new MenuItem("Open");
         MenuItem closeItem = new MenuItem("Close");
 
-        openItem.setOnAction(event -> System.out.println("File opened!"));
-        fileMenu.getItems().add(openItem);
+        //open file explorer
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Json/txt File");
+
+        openItem.setOnAction(event -> {
+            
+            File selectedFile = fileChooser.showOpenDialog(primaryStage);
+            if (selectedFile != null) {
+                // Handle the selected file 
+                System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            }
+        });
+
+        fileMenu.getItems().addAll(openItem, closeItem);
 
         menuBar.getMenus().add(fileMenu);
 
         closeItem.setOnAction(event -> {
-            
             primaryStage.close();
         });
-
         // Layout with MenuBar at top
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
@@ -51,17 +63,8 @@ public class BipJsonConverter extends Application {
         // Input fields
         TextArea textArea = new TextArea();
 
-        // Convert button
-        Button btn = new Button("Convert");
-        btn.setOnAction((ActionEvent event) -> {
-            String inputText = textArea.getText();
-
-            String convertedText = convertJson(inputText);
-            System.out.println("Converted Text: " + convertedText);
-        });
-
         StackPane centerPane = new StackPane();
-        centerPane.getChildren().addAll(textArea, btn);
+        centerPane.getChildren().addAll(textArea);
 
         root.setCenter(centerPane);
 
