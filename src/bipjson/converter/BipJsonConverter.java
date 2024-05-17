@@ -7,11 +7,13 @@ package bipjson.converter;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -24,28 +26,56 @@ public class BipJsonConverter extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        //input fields
-        TextArea texts = new TextArea();
+        // Menu
+        MenuBar menuBar = new MenuBar();
 
-        //convert button
-        Button btn = new Button();
-        btn.setText("Convert");
-        btn.setOnAction((ActionEvent event) -> {
-            String inputText = texts.getText();
+        Menu fileMenu = new Menu("File");
+        // Submenu of file menu
+        MenuItem openItem = new MenuItem("Open");
+        MenuItem closeItem = new MenuItem("Close");
+
+        openItem.setOnAction(event -> System.out.println("File opened!"));
+        fileMenu.getItems().add(openItem);
+
+        menuBar.getMenus().add(fileMenu);
+
+        closeItem.setOnAction(event -> {
             
-            System.out.println("" + inputText);
+            primaryStage.close();
         });
 
-        StackPane root = new StackPane();
+        // Layout with MenuBar at top
+        BorderPane root = new BorderPane();
+        root.setTop(menuBar);
 
-        root.getChildren().add(texts);
-        root.getChildren().add(btn);
+        // Input fields
+        TextArea textArea = new TextArea();
+
+        // Convert button
+        Button btn = new Button("Convert");
+        btn.setOnAction((ActionEvent event) -> {
+            String inputText = textArea.getText();
+
+            String convertedText = convertJson(inputText);
+            System.out.println("Converted Text: " + convertedText);
+        });
+
+        StackPane centerPane = new StackPane();
+        centerPane.getChildren().addAll(textArea, btn);
+
+        root.setCenter(centerPane);
 
         Scene scene = new Scene(root, 600, 600);
 
         primaryStage.setTitle("BipJson Converter");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    //JSON to java class conversion logic
+    private String convertJson(String json) {
+        //conversion will go here
+        return "Converted JSON";
     }
 
     /**
