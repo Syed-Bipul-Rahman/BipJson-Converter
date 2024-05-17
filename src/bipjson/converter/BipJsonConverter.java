@@ -5,7 +5,10 @@
  */
 package bipjson.converter;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import java.nio.file.Path;
@@ -29,6 +32,9 @@ public class BipJsonConverter extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        // Input fields
+        TextArea textArea = new TextArea();
+
         // Menu
         MenuBar menuBar = new MenuBar();
 
@@ -50,7 +56,6 @@ public class BipJsonConverter extends Application {
 
                 // Get the path object
                 Path filePath = selectedFile.toPath();
-
                 // Extract the file extension
                 String extension = null;
                 String fileName = filePath.getFileName().toString();
@@ -61,16 +66,6 @@ public class BipJsonConverter extends Application {
                 } else {
                     System.out.println("File has no extension");
                 }
-
-                // Handle the selected file based on extension (optional)
-//                if (extension.equalsIgnoreCase("json")) {
-//                    //  Perform actions specific to JSON files
-//                } else if (extension.equalsIgnoreCase("txt")) {
-//                    //  Perform actions specific to text files
-//                } else {
-//                    //  Handle other extensions or unsupported files
-//                }
-                // System.out.println("Selected file: " + selectedFile.getAbsolutePath());
                 if (extension.equalsIgnoreCase("txt") || extension.equalsIgnoreCase("json")) {
                     System.out.println("correct file");
 
@@ -81,6 +76,19 @@ public class BipJsonConverter extends Application {
                     alert.setContentText("Currently we do not support " + extension + " File!\nOnly JSON (.json) and TXT (.txt) files are allowed.");
                     alert.showAndWait();
 
+                }
+
+                try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {
+                    StringBuilder fileContent = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        fileContent.append(line).append("\n");
+                    }
+                    // Process the file content
+                    textArea.setText("" + fileContent.toString());
+                } catch (IOException e) {
+                    // Handle file reading errors
+                    e.printStackTrace();
                 }
 
             }
@@ -97,9 +105,6 @@ public class BipJsonConverter extends Application {
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
 
-        // Input fields
-        TextArea textArea = new TextArea();
-
         StackPane centerPane = new StackPane();
         centerPane.getChildren().addAll(textArea);
 
@@ -115,7 +120,7 @@ public class BipJsonConverter extends Application {
     //JSON to java class conversion logic
     private String convertJson(String json) {
         //conversion will go here
-        return "Converted JSON";
+        return "Converted JSON to java code";
     }
 
     /**
