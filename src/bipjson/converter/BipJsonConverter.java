@@ -7,9 +7,10 @@ package bipjson.converter;
 
 import java.io.File;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import java.nio.file.Path;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -41,11 +42,47 @@ public class BipJsonConverter extends Application {
         fileChooser.setTitle("Select Json/txt File");
 
         openItem.setOnAction(event -> {
-            
+
             File selectedFile = fileChooser.showOpenDialog(primaryStage);
             if (selectedFile != null) {
                 // Handle the selected file 
-                System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                // get file extention
+
+                // Get the path object
+                Path filePath = selectedFile.toPath();
+
+                // Extract the file extension
+                String extension = null;
+                String fileName = filePath.getFileName().toString();
+                int dotIndex = fileName.lastIndexOf('.');
+                if (dotIndex >= 0) {
+                    extension = fileName.substring(dotIndex + 1);
+                    System.out.println("Selected file extension: " + extension);
+                } else {
+                    System.out.println("File has no extension");
+                }
+
+                // Handle the selected file based on extension (optional)
+//                if (extension.equalsIgnoreCase("json")) {
+//                    //  Perform actions specific to JSON files
+//                } else if (extension.equalsIgnoreCase("txt")) {
+//                    //  Perform actions specific to text files
+//                } else {
+//                    //  Handle other extensions or unsupported files
+//                }
+                // System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                if (extension.equalsIgnoreCase("txt") || extension.equalsIgnoreCase("json")) {
+                    System.out.println("correct file");
+
+                } else {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("Invalid File Extension");
+                    alert.setHeaderText("Please select a valid file");
+                    alert.setContentText("Currently we do not support " + extension + " File!\nOnly JSON (.json) and TXT (.txt) files are allowed.");
+                    alert.showAndWait();
+
+                }
+
             }
         });
 
